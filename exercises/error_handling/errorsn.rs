@@ -17,18 +17,30 @@
 //
 // Execute `rustlings hint errorsn` for hints :)
 
+// See https://boats.gitlab.io/failure/intro.html
+
 // I AM NOT DONE
 
 use std::error;
 use std::fmt;
 use std::io;
 
+enum MyError {
+    Io(#[cause] io::Error),
+    Parse(#[cause] num::ParseIntError),
+    Creation(#[cause] CreationError),
+}
+
+impl MyError {
+    fn from each error type ???
+}
+
 // PositiveNonzeroInteger is a struct defined below the tests.
-fn read_and_validate(b: &mut dyn io::BufRead) -> Result<PositiveNonzeroInteger, ???> {
+fn read_and_validate(b: &mut dyn io::BufRead) -> Result<PositiveNonzeroInteger, MyError> {
     let mut line = String::new();
-    b.read_line(&mut line);
-    let num: i64 = line.trim().parse();
-    let answer = PositiveNonzeroInteger::new(num);
+    b.read_line(&mut line)?;
+    let num: i64 = line.trim().parse()?;
+    let answer = PositiveNonzeroInteger::new(num)?;
     answer
 }
 
