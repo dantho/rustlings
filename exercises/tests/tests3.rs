@@ -4,8 +4,6 @@
 // we expect to get when we call `is_even(5)`.
 // Execute `rustlings hint tests3` for hints :)
 
-// I AM NOT DONE
-
 pub fn is_even(num: i32) -> bool {
     num % 2 == 0
 }
@@ -16,11 +14,13 @@ mod tests {
 
     #[test]
     fn is_true_when_even() {
-        assert!();
+        const even_value: i32 = 4;
+        assert!(is_even(even_value));
     }
 
     #[test]
-    fn is_false_when_even() {
-        assert!();
+    fn is_false_when_odd() {
+        const odd_value: i32 = 5;
+        assert!(!is_even(odd_value));
     }
 }
