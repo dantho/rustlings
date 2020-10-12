@@ -18,30 +18,61 @@
 // Execute `rustlings hint errorsn` for hints :)
 
 // See https://boats.gitlab.io/failure/intro.html
-
-// I AM NOT DONE
+use std::convert::From;
 
 use std::error;
 use std::fmt;
 use std::io;
+use std::num;
+use MyError::*;
 
+#[derive(Debug)]
 enum MyError {
-    Io(#[cause] io::Error),
-    Parse(#[cause] num::ParseIntError),
-    Creation(#[cause] CreationError),
+    Io(io::Error),
+    Parse(num::ParseIntError),
+    Creation(CreationError),
 }
 
-impl MyError {
-    fn from each error type ???
+impl From<io::Error> for MyError {
+    fn from(item: io::Error) -> Self {
+        Io(item)
+    }
+}
+
+impl From<num::ParseIntError> for MyError {
+    fn from(item: num::ParseIntError) -> Self {
+        Parse(item)
+    }
+}
+
+impl From<CreationError> for MyError {
+    fn from(item: CreationError) -> Self {
+        Creation(item)
+    }
+}
+
+impl fmt::Display for MyError {
+    // This trait requires `fmt` with this exact signature.
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        // Write strictly the first element into the supplied output
+        // stream: `f`. Returns `fmt::Result` which indicates whether the
+        // operation succeeded or failed. Note that `write!` uses syntax which
+        // is very similar to `println!`.
+        write!(f, "{}", match self {
+            Io(e) => e.to_string(),
+            Parse(e) => e.to_string(),
+            Creation(e) => e.to_string()
+        })
+    }
 }
 
 // PositiveNonzeroInteger is a struct defined below the tests.
-fn read_and_validate(b: &mut dyn io::BufRead) -> Result<PositiveNonzeroInteger, MyError> {
+fn read_and_validate(b: &mut dyn io::BufRead) -> Result<PositiveNonzeroInteger, Box<dyn error::Error>> {
     let mut line = String::new();
     b.read_line(&mut line)?;
     let num: i64 = line.trim().parse()?;
     let answer = PositiveNonzeroInteger::new(num)?;
-    answer
+    Ok(answer)
 }
 
 //
