@@ -2,6 +2,8 @@
 // Basically, this is the same as From. The main difference is that this should return a Result type
 // instead of the target type itself.
 // You can read more about it at https://doc.rust-lang.org/std/convert/trait.TryFrom.html
+
+
 use std::convert::{TryFrom, TryInto};
 
 #[derive(Debug)]
@@ -10,8 +12,6 @@ struct Color {
     green: u8,
     blue: u8,
 }
-
-// I AM NOT DONE
 
 // Your task is to complete this implementation
 // and return an Ok result of inner type Color.
@@ -26,6 +26,14 @@ struct Color {
 impl TryFrom<(i16, i16, i16)> for Color {
     type Error = String;
     fn try_from(tuple: (i16, i16, i16)) -> Result<Self, Self::Error> {
+        let (r, g, b) = tuple;
+        let (red, green, blue) = (r as u8, g as u8, b as u8);
+        let (r, g, b) = (red as i16, green as i16, blue as i16);
+        if (r, g, b) == tuple {
+            Ok(Color {red,green,blue})
+        } else {
+            Err("Bad Color".to_string())
+        }
     }
 }
 
@@ -33,6 +41,8 @@ impl TryFrom<(i16, i16, i16)> for Color {
 impl TryFrom<[i16; 3]> for Color {
     type Error = String;
     fn try_from(arr: [i16; 3]) -> Result<Self, Self::Error> {
+        let [r, g, b] = arr;
+        Self::try_from((r,g,b))
     }
 }
 
@@ -40,6 +50,10 @@ impl TryFrom<[i16; 3]> for Color {
 impl TryFrom<&[i16]> for Color {
     type Error = String;
     fn try_from(slice: &[i16]) -> Result<Self, Self::Error> {
+        match slice {
+            &[r,g,b] => Self::try_from((r,g,b)),
+            _ => Err("Bad Slice".to_string()),
+        }
     }
 }
 
